@@ -591,9 +591,13 @@ function copyRef() {
 }
 
 // ── Init ──
-loadProfile();
-loadTopup();
-tg.BackButton.onClick(() => switchPage('profile'));
+window.addEventListener('load', function() {
+  setTimeout(function() {
+    loadProfile();
+    loadTopup();
+  }, 300);
+});
+try { tg.BackButton.onClick(() => switchPage('profile')); } catch(e) {}
 </script>
 </body>
 </html>
