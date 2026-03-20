@@ -421,9 +421,14 @@ let refLink = '';
 // ── API calls ──
 async function apiGet(path) {
   try {
-    const res = await fetch(API_BASE + path, {
-      headers: { 'Authorization': initData }
-    });
+    // Use initData if available, otherwise try to construct minimal auth
+    const auth = initData || '';
+    const userId = tg.initDataUnsafe?.user?.id;
+    
+    const headers = { 'Authorization': auth };
+    if (userId) headers['X-User-Id'] = String(userId);
+    
+    const res = await fetch(API_BASE + path, { headers });
     if (!res.ok) throw new Error(res.status);
     return await res.json();
   } catch(e) {
@@ -434,16 +439,16 @@ async function apiGet(path) {
 
 // ── Load profile ──
 async function loadProfile() {
-  const data = await apiGet('/api/profile');
-  if (!data) {
-    // Fallback to Telegram user data
-    const user = tg.initDataUnsafe?.user;
-    if (user) {
-      document.getElementById('user-name').textContent = user.first_name || 'Пользователь';
-      document.getElementById('user-sub').textContent = user.username ? '@' + user.username : 'WILX AI Studio';
-    }
-    return;
+  // Always show Telegram user data immediately
+  const user = tg.initDataUnsafe?.user;
+  if (user) {
+    document.getElementById('user-name').textContent = user.first_name || 'Пользователь';
+    document.getElementById('user-sub').textContent = (user.username ? '@' + user.username + ' · ' : '') + 'WILX AI Studio';
   }
+
+  const data = await apiGet('/api/profile');
+  if (!data) return;
+
   profileData = data;
   document.getElementById('user-name').textContent = data.name;
   document.getElementById('user-sub').textContent = (data.username ? '@' + data.username + ' · ' : '') + 'WILX AI Studio';
