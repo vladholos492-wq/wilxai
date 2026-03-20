@@ -412,6 +412,9 @@ tg.expand();
 document.documentElement.style.setProperty('--bg', tg.themeParams.bg_color || '#0a0a0f');
 
 const initData = tg.initData || '';
+const debugUserId = tg.initDataUnsafe?.user?.id || null;
+console.log('initData length:', initData.length);
+console.log('user from tg:', tg.initDataUnsafe?.user);
 // В реальном боте замени на свой API URL
 const API_BASE = 'https://whatislove.online';
 
@@ -421,14 +424,17 @@ let refLink = '';
 // ── API calls ──
 async function apiGet(path) {
   try {
-    // Use initData if available, otherwise try to construct minimal auth
-    const auth = initData || '';
     const userId = tg.initDataUnsafe?.user?.id;
+    const auth = initData || '';
+    
+    // Add user_id as query param as fallback
+    const sep = path.includes('?') ? '&' : '?';
+    const fullPath = userId ? path + sep + 'uid=' + userId : path;
     
     const headers = { 'Authorization': auth };
     if (userId) headers['X-User-Id'] = String(userId);
     
-    const res = await fetch(API_BASE + path, { headers });
+    const res = await fetch(API_BASE + fullPath, { headers });
     if (!res.ok) throw new Error(res.status);
     return await res.json();
   } catch(e) {
