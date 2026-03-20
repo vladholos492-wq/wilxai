@@ -431,10 +431,10 @@ async function apiGet(path) {
     const sep = path.includes('?') ? '&' : '?';
     const fullPath = userId ? path + sep + 'uid=' + userId : path;
     
-    const headers = { 'Authorization': auth };
-    if (userId) headers['X-User-Id'] = String(userId);
-    
-    const res = await fetch(API_BASE + fullPath, { headers });
+    const res = await fetch(API_BASE + fullPath, { 
+      mode: 'cors', 
+      credentials: 'omit'
+    });
     if (!res.ok) throw new Error(res.status);
     return await res.json();
   } catch(e) {
@@ -458,7 +458,7 @@ async function loadProfile() {
     if (!uid) return;
 
     const url = 'https://whatislove.online/api/profile?uid=' + uid;
-    const resp = await fetch(url, { method: 'GET', mode: 'cors' });
+    const resp = await fetch(url, { method: 'GET', mode: 'cors', credentials: 'omit' });
     if (!resp.ok) { document.getElementById('stat-balance').textContent = resp.status; return; }
     const data = await resp.json();
 
