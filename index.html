@@ -7,619 +7,220 @@
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800&display=swap');
-
-:root {
-  --bg: #0a0a0f;
-  --bg2: #12121a;
-  --bg3: #1a1a26;
-  --accent: #7c3aed;
-  --accent2: #a78bfa;
-  --green: #10b981;
-  --red: #ef4444;
-  --yellow: #f59e0b;
-  --text: #f1f0ff;
-  --muted: #6b7280;
-  --border: #1e1e2e;
-  --card: #13131f;
-}
-
-* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
-
-body {
-  font-family: 'Space Grotesk', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  overflow-x: hidden;
-  padding-bottom: 80px;
-}
-
-/* ── TOP BAR ── */
-.topbar {
-  position: sticky; top: 0; z-index: 100;
-  padding: 1rem 1.25rem 0.75rem;
-  background: linear-gradient(180deg, var(--bg) 80%, transparent);
-  display: flex; align-items: center; justify-content: space-between;
-}
-.topbar-logo {
-  font-family: 'Syne', sans-serif;
-  font-size: 1.3rem; font-weight: 800;
-  background: linear-gradient(135deg, #a78bfa, #7c3aed);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-}
-.balance-pill {
-  background: linear-gradient(135deg, #7c3aed22, #a78bfa22);
-  border: 1px solid #7c3aed44;
-  padding: 0.35rem 0.85rem;
-  border-radius: 20px;
-  font-size: 0.85rem; font-weight: 600;
-  color: var(--accent2);
-  display: flex; align-items: center; gap: 0.35rem;
-}
-
-/* ── HERO CARD ── */
-.hero {
-  margin: 0 1rem 1rem;
-  background: linear-gradient(135deg, #1a0a3e 0%, #0a1a3e 50%, #1a0a2e 100%);
-  border: 1px solid #7c3aed33;
-  border-radius: 20px;
-  padding: 1.5rem;
-  position: relative; overflow: hidden;
-}
-.hero::before {
-  content: '';
-  position: absolute; top: -50%; left: -50%;
-  width: 200%; height: 200%;
-  background: radial-gradient(ellipse, #7c3aed15 0%, transparent 60%);
-}
-.hero-name {
-  font-family: 'Syne', sans-serif;
-  font-size: 1.5rem; font-weight: 800;
-  margin-bottom: 0.25rem;
-}
-.hero-sub { color: var(--muted); font-size: 0.85rem; margin-bottom: 1.25rem; }
-.hero-stats {
-  display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: 0.75rem;
-}
-.stat {
-  background: rgba(255,255,255,0.05);
-  border-radius: 12px;
-  padding: 0.75rem;
-  text-align: center;
-}
-.stat-val {
-  font-family: 'Syne', sans-serif;
-  font-size: 1.3rem; font-weight: 800;
-  color: var(--accent2);
-}
-.stat-label { font-size: 0.65rem; color: var(--muted); margin-top: 0.2rem; }
-
-/* ── SECTION ── */
-.section { margin: 0 1rem 1.5rem; }
-.section-title {
-  font-size: 0.7rem; text-transform: uppercase;
-  letter-spacing: 0.12em; color: var(--muted);
-  font-weight: 700; margin-bottom: 0.75rem;
-  padding-left: 0.25rem;
-}
-
-/* ── TOPUP CARDS ── */
-.topup-grid {
-  display: grid; grid-template-columns: repeat(2, 1fr);
-  gap: 0.6rem;
-}
-.topup-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 1rem;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  position: relative; overflow: hidden;
-}
-.topup-card:active { transform: scale(0.96); }
-.topup-card.featured {
-  border-color: #7c3aed55;
-  background: linear-gradient(135deg, #1a0a3e, #0a1428);
-}
-.topup-card.featured::before {
-  content: 'ВЫГОДА';
-  position: absolute; top: 8px; right: -20px;
-  background: var(--accent); color: white;
-  font-size: 0.55rem; font-weight: 800;
-  padding: 2px 28px; transform: rotate(35deg);
-  letter-spacing: 0.05em;
-}
-.topup-credits {
-  font-family: 'Syne', sans-serif;
-  font-size: 1.4rem; font-weight: 800;
-  color: var(--accent2);
-}
-.topup-credits span { font-size: 0.75rem; color: var(--muted); font-family: 'Space Grotesk'; font-weight: 400; }
-.topup-price {
-  font-size: 1rem; font-weight: 700;
-  color: var(--text); margin-top: 0.2rem;
-}
-.topup-stars { font-size: 0.75rem; color: var(--muted); }
-
-/* ── GEN HISTORY ── */
-.gen-item {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 0.85rem 1rem;
-  margin-bottom: 0.6rem;
-  display: flex; align-items: center; gap: 0.85rem;
-}
-.gen-icon {
-  width: 40px; height: 40px;
-  border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1.2rem; flex-shrink: 0;
-}
-.gen-icon.video { background: #1a1040; }
-.gen-icon.image { background: #0a1f30; }
-.gen-icon.audio { background: #1a2010; }
-.gen-icon.voice { background: #201020; }
-.gen-info { flex: 1; min-width: 0; }
-.gen-model { font-weight: 600; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.gen-meta { font-size: 0.75rem; color: var(--muted); margin-top: 0.15rem; }
-.gen-cost {
-  font-weight: 700; font-size: 0.85rem;
-  color: var(--accent2); flex-shrink: 0;
-}
-.gen-status {
-  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
-}
-.gen-status.ok { background: var(--green); }
-.gen-status.fail { background: var(--red); }
-.gen-status.pending { background: var(--yellow); }
-
-/* ── REFERRAL ── */
-.ref-card {
-  background: var(--card);
-  border: 1px solid #10b98133;
-  border-radius: 16px;
-  padding: 1.25rem;
-}
-.ref-link-box {
-  background: var(--bg3);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 0.75rem 1rem;
-  font-size: 0.8rem;
-  color: var(--accent2);
-  word-break: break-all;
-  margin: 0.75rem 0;
-  font-family: monospace;
-}
-.ref-stats {
-  display: flex; gap: 1rem;
-}
-.ref-stat { text-align: center; flex: 1; }
-.ref-stat-val {
-  font-family: 'Syne', sans-serif;
-  font-size: 1.5rem; font-weight: 800;
-  color: var(--green);
-}
-.ref-stat-label { font-size: 0.7rem; color: var(--muted); }
-
-/* ── BUTTONS ── */
-.btn {
-  width: 100%; padding: 0.85rem;
-  border: none; border-radius: 12px;
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 0.95rem; font-weight: 600;
-  cursor: pointer; transition: all 0.15s;
-  display: flex; align-items: center; justify-content: center; gap: 0.5rem;
-}
-.btn:active { transform: scale(0.97); }
-.btn-primary {
-  background: linear-gradient(135deg, #7c3aed, #6d28d9);
-  color: white;
-}
-.btn-outline {
-  background: transparent;
-  border: 1px solid var(--accent);
-  color: var(--accent2);
-}
-.btn-green {
-  background: linear-gradient(135deg, #10b981, #059669);
-  color: white;
-}
-
-/* ── BOTTOM NAV ── */
-.bottom-nav {
-  position: fixed; bottom: 0; left: 0; right: 0;
-  background: var(--bg2);
-  border-top: 1px solid var(--border);
-  display: flex; padding: 0.5rem;
-  padding-bottom: calc(0.5rem + env(safe-area-inset-bottom));
-  z-index: 100;
-}
-.nav-item {
-  flex: 1; display: flex; flex-direction: column;
-  align-items: center; gap: 0.2rem;
-  padding: 0.5rem;
-  cursor: pointer; border-radius: 10px;
-  transition: all 0.15s;
-  border: none; background: none;
-}
-.nav-item.active { background: #7c3aed22; }
-.nav-icon { font-size: 1.3rem; }
-.nav-label { font-size: 0.6rem; color: var(--muted); font-weight: 600; }
-.nav-item.active .nav-label { color: var(--accent2); }
-
-/* ── PAGES ── */
-.page { display: none; }
-.page.active { display: block; }
-
-/* ── LOADING ── */
-.loading {
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  min-height: 200px; gap: 1rem;
-}
-.spinner {
-  width: 40px; height: 40px;
-  border: 3px solid var(--border);
-  border-top-color: var(--accent);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-
-.empty {
-  text-align: center; padding: 3rem 1rem;
-  color: var(--muted);
-}
-.empty-icon { font-size: 3rem; margin-bottom: 0.75rem; }
-
-/* Pulse animation for balance */
-@keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(124,58,237,0); }
-  50% { box-shadow: 0 0 0 8px rgba(124,58,237,0.1); }
-}
-.balance-pill { animation: pulse-glow 3s infinite; }
+:root{--bg:#0a0a0f;--bg2:#12121a;--bg3:#1a1a26;--accent:#7c3aed;--accent2:#a78bfa;--green:#10b981;--red:#ef4444;--yellow:#f59e0b;--text:#f1f0ff;--muted:#6b7280;--border:#1e1e2e;--card:#13131f}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;padding-bottom:80px}
+.topbar{position:sticky;top:0;z-index:100;padding:1rem 1.25rem .75rem;background:linear-gradient(180deg,var(--bg) 80%,transparent);display:flex;align-items:center;justify-content:space-between}
+.topbar-logo{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;background:linear-gradient(135deg,#a78bfa,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.balance-pill{background:linear-gradient(135deg,#7c3aed22,#a78bfa22);border:1px solid #7c3aed44;padding:.35rem .85rem;border-radius:20px;font-size:.85rem;font-weight:600;color:var(--accent2);display:flex;align-items:center;gap:.35rem}
+.hero{margin:0 1rem 1rem;background:linear-gradient(135deg,#1a0a3e 0%,#0a1a3e 50%,#1a0a2e 100%);border:1px solid #7c3aed33;border-radius:20px;padding:1.5rem;position:relative;overflow:hidden}
+.hero-name{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;margin-bottom:.25rem}
+.hero-sub{color:var(--muted);font-size:.85rem;margin-bottom:1.25rem}
+.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem}
+.stat{background:rgba(255,255,255,.05);border-radius:12px;padding:.75rem;text-align:center}
+.stat-val{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--accent2)}
+.stat-label{font-size:.65rem;color:var(--muted);margin-top:.2rem}
+.section{margin:0 1rem 1.5rem}
+.section-title{font-size:.7rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:700;margin-bottom:.75rem;padding-left:.25rem}
+.topup-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.6rem}
+.topup-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1rem;cursor:pointer;transition:all .15s ease;position:relative;overflow:hidden}
+.topup-card:active{transform:scale(.96)}
+.topup-card.featured{border-color:#7c3aed55;background:linear-gradient(135deg,#1a0a3e,#0a1428)}
+.topup-card.featured::before{content:'ВЫГОДА';position:absolute;top:8px;right:-20px;background:var(--accent);color:#fff;font-size:.55rem;font-weight:800;padding:2px 28px;transform:rotate(35deg);letter-spacing:.05em}
+.topup-credits{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--accent2)}
+.topup-credits span{font-size:.75rem;color:var(--muted);font-family:'Space Grotesk';font-weight:400}
+.topup-price{font-size:1rem;font-weight:700;color:var(--text);margin-top:.2rem}
+.topup-stars{font-size:.75rem;color:var(--muted)}
+.gen-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:.85rem 1rem;margin-bottom:.6rem;display:flex;align-items:center;gap:.85rem}
+.gen-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+.gen-icon.video{background:#1a1040}.gen-icon.image{background:#0a1f30}.gen-icon.audio{background:#1a2010}.gen-icon.voice{background:#201020}
+.gen-info{flex:1;min-width:0}
+.gen-model{font-weight:600;font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gen-meta{font-size:.75rem;color:var(--muted);margin-top:.15rem}
+.gen-cost{font-weight:700;font-size:.85rem;color:var(--accent2);flex-shrink:0}
+.gen-status{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.gen-status.ok{background:var(--green)}.gen-status.fail{background:var(--red)}.gen-status.pending{background:var(--yellow)}
+.ref-card{background:var(--card);border:1px solid #10b98133;border-radius:16px;padding:1.25rem}
+.ref-link-box{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:.75rem 1rem;font-size:.8rem;color:var(--accent2);word-break:break-all;margin:.75rem 0;font-family:monospace}
+.ref-stats{display:flex;gap:1rem}
+.ref-stat{text-align:center;flex:1}
+.ref-stat-val{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;color:var(--green)}
+.ref-stat-label{font-size:.7rem;color:var(--muted)}
+.btn{width:100%;padding:.85rem;border:none;border-radius:12px;font-family:'Space Grotesk',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:.5rem}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff}
+.btn-outline{background:transparent;border:1px solid var(--accent);color:var(--accent2)}
+.btn-green{background:linear-gradient(135deg,#10b981,#059669);color:#fff}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);display:flex;padding:.5rem;padding-bottom:calc(.5rem + env(safe-area-inset-bottom));z-index:100}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:.2rem;padding:.5rem;cursor:pointer;border-radius:10px;transition:all .15s;border:none;background:none}
+.nav-item.active{background:#7c3aed22}
+.nav-icon{font-size:1.3rem}
+.nav-label{font-size:.6rem;color:var(--muted);font-weight:600}
+.nav-item.active .nav-label{color:var(--accent2)}
+.page{display:none}.page.active{display:block}
+.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:200px;gap:1rem}
+.spinner{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.empty{text-align:center;padding:3rem 1rem;color:var(--muted)}
+.empty-icon{font-size:3rem;margin-bottom:.75rem}
 </style>
 </head>
 <body>
-
-<!-- TOP BAR -->
 <div class="topbar">
   <div class="topbar-logo">⚡ WILX AI</div>
-  <div class="balance-pill" id="balance-top">
-    <span>💎</span>
-    <span id="balance-val">—</span>
-    <span style="opacity:0.6">кр</span>
-  </div>
+  <div class="balance-pill"><span>💎</span><span id="balance-val">—</span><span style="opacity:.6">кр</span></div>
 </div>
 
-<!-- PAGE: ПРОФИЛЬ -->
 <div class="page active" id="page-profile">
   <div class="hero">
     <div class="hero-name" id="user-name">Загрузка...</div>
-    <div class="hero-sub" id="user-sub">@username · WILX AI Studio</div>
+    <div class="hero-sub" id="user-sub">WILX AI Studio</div>
     <div class="hero-stats">
-      <div class="stat">
-        <div class="stat-val" id="stat-balance">—</div>
-        <div class="stat-label">Кредитов</div>
-      </div>
-      <div class="stat">
-        <div class="stat-val" id="stat-gens">—</div>
-        <div class="stat-label">Генераций</div>
-      </div>
-      <div class="stat">
-        <div class="stat-val" id="stat-refs">—</div>
-        <div class="stat-label">Рефералов</div>
-      </div>
+      <div class="stat"><div class="stat-val" id="stat-balance">—</div><div class="stat-label">Кредитов</div></div>
+      <div class="stat"><div class="stat-val" id="stat-gens">—</div><div class="stat-label">Генераций</div></div>
+      <div class="stat"><div class="stat-val" id="stat-refs">—</div><div class="stat-label">Рефералов</div></div>
     </div>
   </div>
-
   <div class="section">
     <div class="section-title">Быстрые действия</div>
-    <button class="btn btn-primary" onclick="switchPage('topup')" style="margin-bottom:0.6rem">
-      💳 Пополнить баланс
-    </button>
-    <button class="btn btn-outline" onclick="switchPage('ref')">
-      🔗 Реферальная программа
-    </button>
+    <button class="btn btn-primary" onclick="switchPage('topup')" style="margin-bottom:.6rem">💳 Пополнить баланс</button>
+    <button class="btn btn-outline" onclick="switchPage('ref')">🔗 Реферальная программа</button>
   </div>
 </div>
 
-<!-- PAGE: ПОПОЛНЕНИЕ -->
 <div class="page" id="page-topup">
-  <div class="section" style="margin-top:0.5rem">
+  <div class="section" style="margin-top:.5rem">
     <div class="section-title">Выбери пакет</div>
-    <div class="topup-grid" id="topup-grid">
-      <div class="loading"><div class="spinner"></div></div>
-    </div>
+    <div class="topup-grid" id="topup-grid"></div>
   </div>
   <div class="section">
-    <button class="btn btn-outline" onclick="openBot()">
-      💬 Оплатить через бота
-    </button>
+    <button class="btn btn-outline" onclick="openBot()">💬 Оплатить через бота</button>
   </div>
 </div>
 
-<!-- PAGE: ИСТОРИЯ -->
 <div class="page" id="page-history">
-  <div class="section" style="margin-top:0.5rem">
+  <div class="section" style="margin-top:.5rem">
     <div class="section-title">История генераций</div>
-    <div id="history-list">
-      <div class="loading"><div class="spinner"></div></div>
-    </div>
+    <div id="history-list"><div class="loading"><div class="spinner"></div></div></div>
   </div>
 </div>
 
-<!-- PAGE: РЕФЕРАЛЫ -->
 <div class="page" id="page-ref">
-  <div class="section" style="margin-top:0.5rem">
+  <div class="section" style="margin-top:.5rem">
     <div class="section-title">Реферальная программа</div>
     <div class="ref-card">
-      <div style="font-weight:700; margin-bottom:0.5rem">🎁 Приглашай друзей — получай кредиты!</div>
-      <div style="font-size:0.85rem; color:var(--muted); margin-bottom:0.75rem">
-        За каждого приглашённого пользователя ты получаешь бонусные кредиты.
-      </div>
+      <div style="font-weight:700;margin-bottom:.5rem">🎁 Приглашай друзей — получай кредиты!</div>
+      <div style="font-size:.85rem;color:var(--muted);margin-bottom:.75rem">За каждого приглашённого пользователя ты получаешь бонусные кредиты.</div>
       <div class="ref-stats">
-        <div class="ref-stat">
-          <div class="ref-stat-val" id="ref-count">0</div>
-          <div class="ref-stat-label">Рефералов</div>
-        </div>
-        <div class="ref-stat">
-          <div class="ref-stat-val" id="ref-earned" style="color:var(--accent2)">0</div>
-          <div class="ref-stat-label">Заработано кр</div>
-        </div>
+        <div class="ref-stat"><div class="ref-stat-val" id="ref-count">0</div><div class="ref-stat-label">Рефералов</div></div>
+        <div class="ref-stat"><div class="ref-stat-val" id="ref-earned" style="color:var(--accent2)">0</div><div class="ref-stat-label">Заработано кр</div></div>
       </div>
       <div class="ref-link-box" id="ref-link">Загрузка...</div>
-      <button class="btn btn-green" onclick="shareRef()" style="margin-bottom:0.6rem">
-        📤 Поделиться ссылкой
-      </button>
-      <button class="btn btn-outline" onclick="copyRef()">
-        📋 Скопировать ссылку
-      </button>
+      <button class="btn btn-green" onclick="shareRef()" style="margin-bottom:.6rem">📤 Поделиться ссылкой</button>
+      <button class="btn btn-outline" onclick="copyRef()">📋 Скопировать ссылку</button>
     </div>
   </div>
 </div>
 
-<!-- BOTTOM NAV -->
 <nav class="bottom-nav">
-  <button class="nav-item active" id="nav-profile" onclick="switchPage('profile')">
-    <span class="nav-icon">👤</span>
-    <span class="nav-label">Профиль</span>
-  </button>
-  <button class="nav-item" id="nav-topup" onclick="switchPage('topup')">
-    <span class="nav-icon">💳</span>
-    <span class="nav-label">Пополнить</span>
-  </button>
-  <button class="nav-item" id="nav-history" onclick="switchPage('history')">
-    <span class="nav-icon">📊</span>
-    <span class="nav-label">История</span>
-  </button>
-  <button class="nav-item" id="nav-ref" onclick="switchPage('ref')">
-    <span class="nav-icon">🔗</span>
-    <span class="nav-label">Рефералы</span>
-  </button>
+  <button class="nav-item active" id="nav-profile" onclick="switchPage('profile')"><span class="nav-icon">👤</span><span class="nav-label">Профиль</span></button>
+  <button class="nav-item" id="nav-topup" onclick="switchPage('topup')"><span class="nav-icon">💳</span><span class="nav-label">Пополнить</span></button>
+  <button class="nav-item" id="nav-history" onclick="switchPage('history')"><span class="nav-icon">📊</span><span class="nav-label">История</span></button>
+  <button class="nav-item" id="nav-ref" onclick="switchPage('ref')"><span class="nav-icon">🔗</span><span class="nav-label">Рефералы</span></button>
 </nav>
 
 <script>
-const tg = window.Telegram.WebApp;
+var tg = window.Telegram.WebApp;
+var API = 'https://whatislove.online';
+var uid = null;
+var refLink = '';
+
 tg.ready();
 tg.expand();
 
-// Применяем тему Telegram
-document.documentElement.style.setProperty('--bg', tg.themeParams.bg_color || '#0a0a0f');
+var modelIcons = {'kling30':'🎬','kling_motion_26':'🎭','kling_motion_30':'🎭','veo31_fast':'🎬','sora2':'🎬','wan26':'🎬','wan22':'✨','nano_banana':'🖼','grok':'🖼','topaz':'📈','suno':'🎵','elevenlabs':'🎙','kling_avatar_pro':'🎤'};
+var modelTypes = {'kling30':'video','sora2':'video','wan26':'video','wan22':'video','veo31_fast':'video','kling_motion_26':'video','kling_motion_30':'video','nano_banana':'image','grok':'image','suno':'audio','elevenlabs':'voice'};
+var modelNames = {'kling30':'Kling 3.0','kling_motion_26':'Kling Motion 2.6','kling_motion_30':'Kling Motion 3.0','veo31_fast':'Veo 3.1','sora2':'Sora 2 Pro','wan26':'Wan 2.6','wan22':'Wan 2.2','nano_banana':'Nano Banana 2','grok':'Grok Imagine','topaz':'Topaz Upscale','suno':'Suno V5','elevenlabs':'ElevenLabs V3','kling_avatar_pro':'Kling Avatar'};
 
-const initData = tg.initData || '';
-const debugUserId = tg.initDataUnsafe?.user?.id || null;
-console.log('initData length:', initData.length);
-console.log('user from tg:', tg.initDataUnsafe?.user);
-// В реальном боте замени на свой API URL
-const API_BASE = 'https://whatislove.online';
+function get(id){ return document.getElementById(id); }
 
-let profileData = null;
-let refLink = '';
-
-// ── API calls ──
-async function apiGet(path) {
-  try {
-    const userId = tg.initDataUnsafe?.user?.id;
-    const auth = initData || '';
-    
-    // Add user_id as query param as fallback
-    const sep = path.includes('?') ? '&' : '?';
-    const fullPath = userId ? path + sep + 'uid=' + userId : path;
-    
-    const res = await fetch(API_BASE + fullPath, { 
-      mode: 'cors', 
-      credentials: 'omit'
-    });
-    if (!res.ok) throw new Error(res.status);
-    return await res.json();
-  } catch(e) {
-    console.error('API error:', e);
-    return null;
-  }
+function switchPage(page) {
+  ['profile','topup','history','ref'].forEach(function(p){
+    get('page-'+p).classList.toggle('active', p===page);
+    var n = get('nav-'+p); if(n) n.classList.toggle('active', p===page);
+  });
+  if(page==='history') loadHistory();
+  if(page==='ref') loadRef();
+  if(page==='topup') loadTopup();
 }
 
-// ── Load profile ──
-async function loadProfile() {
-  try {
-    const user = tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user : null;
-    if (user) {
-      document.getElementById('user-name').textContent = user.first_name || 'Пользователь';
-      if (user.username) {
-        document.getElementById('user-sub').textContent = '@' + user.username + ' · WILX AI Studio';
-      }
-    }
-
-    const uid = user ? user.id : null;
-    if (!uid) return;
-
-    const url = 'https://whatislove.online/api/profile?uid=' + uid;
-    const resp = await fetch(url, { method: 'GET', mode: 'cors', credentials: 'omit' });
-    if (!resp.ok) { document.getElementById('stat-balance').textContent = resp.status; return; }
-    const data = await resp.json();
-
-    document.getElementById('user-name').textContent = data.name || user.first_name || 'Пользователь';
-    document.getElementById('user-sub').textContent = (data.username ? '@' + data.username + ' · ' : '') + 'WILX AI Studio';
-    document.getElementById('balance-val').textContent = data.balance;
-    document.getElementById('stat-balance').textContent = data.balance;
-    document.getElementById('stat-gens').textContent = data.success_gens;
-    document.getElementById('stat-refs').textContent = data.referrals;
-  } catch(e) {
-    document.getElementById('stat-balance').textContent = String(e).slice(0, 20);
-  }
-}
-
-// ── Load topup packages ──
 function loadTopup() {
-  const packages = [
-    { credits: 100, rub: 100, stars: 85 },
-    { credits: 500, rub: 500, stars: 425 },
-    { credits: 1000, rub: 1000, stars: 850 },
-    { credits: 5750, rub: 5000, stars: 4250, bonus: true },
-  ];
-
-  const grid = document.getElementById('topup-grid');
-  grid.innerHTML = packages.map((p, i) => `
-    <div class="topup-card ${p.bonus ? 'featured' : ''}" onclick="buyPackage(${i})">
-      <div class="topup-credits">${p.credits.toLocaleString()} <span>кр</span></div>
-      <div class="topup-price">₽${p.rub.toLocaleString()}</div>
-      <div class="topup-stars">⭐ ${p.stars}</div>
-    </div>
-  `).join('');
-}
-
-// ── Load history ──
-async function loadHistory() {
-  const list = document.getElementById('history-list');
-  const data = await apiGet('/api/history?limit=30');
-
-  if (!data || data.length === 0) {
-    list.innerHTML = `<div class="empty"><div class="empty-icon">🎬</div><div>Генераций пока нет</div></div>`;
-    return;
-  }
-
-  const modelIcons = {
-    'kling30': '🎬', 'kling_motion_26': '🎭', 'kling_motion_30': '🎭',
-    'veo31_fast': '🎬', 'sora2': '🎬', 'wan26': '🎬', 'wan22': '✨',
-    'nano_banana': '🖼', 'grok': '🖼', 'topaz': '📈',
-    'suno': '🎵', 'elevenlabs': '🎙', 'kling_avatar_pro': '🎤',
-  };
-  const modelTypes = {
-    'kling30': 'video', 'sora2': 'video', 'wan26': 'video', 'wan22': 'video',
-    'veo31_fast': 'video', 'kling_motion_26': 'video', 'kling_motion_30': 'video',
-    'nano_banana': 'image', 'grok': 'image',
-    'suno': 'audio', 'elevenlabs': 'voice',
-  };
-  const modelNames = {
-    'kling30': 'Kling 3.0', 'kling_motion_26': 'Kling Motion 2.6',
-    'kling_motion_30': 'Kling Motion 3.0', 'veo31_fast': 'Veo 3.1',
-    'sora2': 'Sora 2 Pro', 'wan26': 'Wan 2.6', 'wan22': 'Wan 2.2',
-    'nano_banana': 'Nano Banana 2', 'grok': 'Grok Imagine',
-    'topaz': 'Topaz Upscale', 'suno': 'Suno V5',
-    'elevenlabs': 'ElevenLabs V3', 'kling_avatar_pro': 'Kling Avatar',
-  };
-
-  list.innerHTML = data.map(g => {
-    const icon = modelIcons[g.model] || '✨';
-    const type = modelTypes[g.model] || 'image';
-    const name = modelNames[g.model] || g.model;
-    const status = g.status === 'succeeded' ? 'ok' : g.status === 'failed' ? 'fail' : 'pending';
-    const date = g.created_at ? new Date(g.created_at).toLocaleDateString('ru', {day:'2-digit',month:'short'}) : '';
-    return `
-      <div class="gen-item">
-        <div class="gen-icon ${type}">${icon}</div>
-        <div class="gen-info">
-          <div class="gen-model">${name}</div>
-          <div class="gen-meta">${g.mode} · ${date}</div>
-        </div>
-        <div class="gen-cost">${g.cost} кр</div>
-        <div class="gen-status ${status}"></div>
-      </div>
-    `;
+  var pkgs = [{c:100,r:100,s:85},{c:500,r:500,s:425},{c:1000,r:1000,s:850},{c:5750,r:5000,s:4250,bonus:true}];
+  get('topup-grid').innerHTML = pkgs.map(function(p,i){
+    return '<div class="topup-card'+(p.bonus?' featured':'')+'" onclick="buyPkg('+i+')"><div class="topup-credits">'+p.c+' <span>кр</span></div><div class="topup-price">₽'+p.r+'</div><div class="topup-stars">⭐ '+p.s+'</div></div>';
   }).join('');
 }
 
-// ── Load referral ──
-async function loadRef() {
-  const data = await apiGet('/api/referral');
-  if (!data) {
-    // Fallback
-    const userId = tg.initDataUnsafe?.user?.id;
-    if (userId) {
-      refLink = `https://t.me/WILXaibot?start=ref_${userId}`;
-      document.getElementById('ref-link').textContent = refLink;
-    }
-    return;
+function loadHistory() {
+  if(!uid) return;
+  fetch(API+'/api/history?limit=30&uid='+uid)
+    .then(function(r){return r.json();})
+    .then(function(data){
+      if(!data||!data.length){get('history-list').innerHTML='<div class="empty"><div class="empty-icon">🎬</div><div>Генераций пока нет</div></div>';return;}
+      get('history-list').innerHTML = data.map(function(g){
+        var icon=modelIcons[g.model]||'✨';
+        var type=modelTypes[g.model]||'image';
+        var name=modelNames[g.model]||g.model;
+        var status=g.status==='succeeded'?'ok':g.status==='failed'?'fail':'pending';
+        var date=g.created_at?new Date(g.created_at).toLocaleDateString('ru',{day:'2-digit',month:'short'}):'';
+        return '<div class="gen-item"><div class="gen-icon '+type+'">'+icon+'</div><div class="gen-info"><div class="gen-model">'+name+'</div><div class="gen-meta">'+g.mode+' · '+date+'</div></div><div class="gen-cost">'+g.cost+' кр</div><div class="gen-status '+status+'"></div></div>';
+      }).join('');
+    }).catch(function(){get('history-list').innerHTML='<div class="empty"><div class="empty-icon">❌</div><div>Ошибка загрузки</div></div>';});
+}
+
+function loadRef() {
+  if(!uid){
+    refLink='https://t.me/WILXaibot?start=ref_'+uid;
+    get('ref-link').textContent=refLink;return;
   }
-  refLink = data.ref_link;
-  document.getElementById('ref-link').textContent = refLink;
-  document.getElementById('ref-count').textContent = data.count;
-  document.getElementById('ref-earned').textContent = data.count * 50; // 50 кр за реферала
+  fetch(API+'/api/referral?uid='+uid)
+    .then(function(r){return r.json();})
+    .then(function(data){
+      refLink=data.ref_link;
+      get('ref-link').textContent=refLink;
+      get('ref-count').textContent=data.count;
+      get('ref-earned').textContent=data.count*50;
+    }).catch(function(){});
 }
 
-// ── Navigation ──
-const pages = ['profile', 'topup', 'history', 'ref'];
-function switchPage(page) {
-  pages.forEach(p => {
-    document.getElementById('page-' + p).classList.toggle('active', p === page);
-    document.getElementById('nav-' + p)?.classList.toggle('active', p === page);
-  });
-  // Lazy load
-  if (page === 'history') loadHistory();
-  if (page === 'ref') loadRef();
-  if (page === 'topup') loadTopup();
+function buyPkg(i){ tg.showAlert('Для оплаты перейди в бот и выбери раздел "Оплата"'); openBot(); }
+function openBot(){ tg.openTelegramLink('https://t.me/WILXaibot'); }
+function shareRef(){ if(refLink) tg.openTelegramLink('https://t.me/share/url?url='+encodeURIComponent(refLink)+'&text='+encodeURIComponent('🤖 Генерируй видео, фото и музыку с WILX AI Studio!')); }
+function copyRef(){ if(refLink) navigator.clipboard&&navigator.clipboard.writeText(refLink).then(function(){tg.showAlert('✅ Ссылка скопирована!');}); }
+
+// INIT
+var u = tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user : null;
+if(u) {
+  uid = u.id;
+  get('user-name').textContent = u.first_name || 'Пользователь';
+  get('user-sub').textContent = (u.username ? '@'+u.username+' · ' : '') + 'WILX AI Studio';
 }
 
-// ── Actions ──
-function buyPackage(idx) {
-  tg.showAlert('Для оплаты перейди в бот и выбери раздел "Оплата"');
-  openBot();
-}
+loadTopup();
 
-function openBot() {
-  tg.openTelegramLink('https://t.me/WILXaibot');
-}
-
-function shareRef() {
-  if (refLink) {
-    tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(refLink)}&text=${encodeURIComponent('🤖 Генерируй видео, фото и музыку с WILX AI Studio!')}`);
-  }
-}
-
-function copyRef() {
-  if (refLink) {
-    navigator.clipboard?.writeText(refLink).then(() => {
-      tg.showAlert('✅ Ссылка скопирована!');
-    }) || tg.showAlert(refLink);
-  }
-}
-
-// ── Init ──
-window.addEventListener('load', function() {
-  var uid = tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user.id : null;
-  if (!uid) return;
-  
-  fetch('https://whatislove.online/api/profile?uid=' + uid, {mode:'cors',credentials:'omit'})
-    .then(function(r){ return r.json(); })
+if(uid) {
+  fetch(API+'/api/profile?uid='+uid)
+    .then(function(r){return r.json();})
     .then(function(d){
-      document.getElementById('user-name').textContent = d.name;
-      document.getElementById('user-sub').textContent = '@' + d.username + ' · WILX AI Studio';
-      document.getElementById('balance-val').textContent = d.balance;
-      document.getElementById('stat-balance').textContent = d.balance;
-      document.getElementById('stat-gens').textContent = d.success_gens;
-      document.getElementById('stat-refs').textContent = d.referrals;
+      get('user-name').textContent = d.name || (u ? u.first_name : 'Пользователь');
+      get('user-sub').textContent = (d.username?'@'+d.username+' · ':'') + 'WILX AI Studio';
+      get('balance-val').textContent = d.balance;
+      get('stat-balance').textContent = d.balance;
+      get('stat-gens').textContent = d.success_gens;
+      get('stat-refs').textContent = d.referrals;
     })
-    .catch(function(e){
-      document.getElementById('stat-balance').textContent = String(e).slice(0,30);
-    });
-
-  loadTopup();
-});
-try { tg.BackButton.onClick(() => switchPage('profile')); } catch(e) {}
+    .catch(function(e){ get('stat-balance').textContent = '!'; });
+}
 </script>
 </body>
 </html>
