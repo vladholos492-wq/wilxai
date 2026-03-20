@@ -445,24 +445,30 @@ async function apiGet(path) {
 
 // ── Load profile ──
 async function loadProfile() {
-  // Always show Telegram user data immediately
-  const user = tg.initDataUnsafe?.user;
-  if (user) {
-    document.getElementById('user-name').textContent = user.first_name || 'Пользователь';
-    document.getElementById('user-sub').textContent = (user.username ? '@' + user.username + ' · ' : '') + 'WILX AI Studio';
+  try {
+    const user = tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user : null;
+    if (user) {
+      document.getElementById('user-name').textContent = user.first_name || 'Пользователь';
+      if (user.username) {
+        document.getElementById('user-sub').textContent = '@' + user.username + ' · WILX AI Studio';
+      }
+    }
+
+    const uid = user ? user.id : null;
+    if (!uid) return;
+
+    const url = 'https://whatislove.online/api/profile?uid=' + uid;
+    const resp = await fetch(url);
+    const data = await resp.json();
+
+    document.getElementById('user-name').textContent = data.name || 'Пользователь';
+    document.getElementById('balance-val').textContent = data.balance;
+    document.getElementById('stat-balance').textContent = data.balance;
+    document.getElementById('stat-gens').textContent = data.success_gens;
+    document.getElementById('stat-refs').textContent = data.referrals;
+  } catch(e) {
+    document.getElementById('stat-balance').textContent = 'err';
   }
-
-  const data = await apiGet('/api/profile');
-  if (!data) return;
-
-  profileData = data;
-  document.getElementById('user-name').textContent = data.name || 'Пользователь';
-  document.getElementById('user-sub').textContent = (data.username ? '@' + data.username + ' · ' : '') + 'WILX AI Studio';
-  document.getElementById('balance-val').textContent = String(data.balance !== undefined ? data.balance : '—');
-  document.getElementById('stat-balance').textContent = String(data.balance !== undefined ? data.balance : '—');
-  document.getElementById('stat-gens').textContent = String(data.success_gens !== undefined ? data.success_gens : '—');
-  document.getElementById('stat-refs').textContent = String(data.referrals !== undefined ? data.referrals : '—');
-  console.log('Profile loaded:', JSON.stringify(data));
 }
 
 // ── Load topup packages ──
