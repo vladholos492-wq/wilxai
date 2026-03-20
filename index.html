@@ -456,12 +456,13 @@ async function loadProfile() {
   if (!data) return;
 
   profileData = data;
-  document.getElementById('user-name').textContent = data.name;
+  document.getElementById('user-name').textContent = data.name || 'Пользователь';
   document.getElementById('user-sub').textContent = (data.username ? '@' + data.username + ' · ' : '') + 'WILX AI Studio';
-  document.getElementById('balance-val').textContent = data.balance ?? '0';
-  document.getElementById('stat-balance').textContent = data.balance ?? '0';
-  document.getElementById('stat-gens').textContent = data.success_gens ?? '0';
-  document.getElementById('stat-refs').textContent = data.referrals ?? '0';
+  document.getElementById('balance-val').textContent = String(data.balance !== undefined ? data.balance : '—');
+  document.getElementById('stat-balance').textContent = String(data.balance !== undefined ? data.balance : '—');
+  document.getElementById('stat-gens').textContent = String(data.success_gens !== undefined ? data.success_gens : '—');
+  document.getElementById('stat-refs').textContent = String(data.referrals !== undefined ? data.referrals : '—');
+  console.log('Profile loaded:', JSON.stringify(data));
 }
 
 // ── Load topup packages ──
@@ -590,7 +591,6 @@ function copyRef() {
 }
 
 // ── Init ──
-alert('v6 loaded');
 loadProfile();
 loadTopup();
 tg.BackButton.onClick(() => switchPage('profile'));
