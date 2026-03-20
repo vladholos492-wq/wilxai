@@ -598,6 +598,11 @@ function copyRef() {
 
 // ── Init ──
 window.addEventListener('load', function() {
+  // Show debug info directly on page
+  var user = tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user : null;
+  var debugText = 'uid=' + (user ? user.id : 'NULL') + ' initData=' + (tg.initData ? tg.initData.length : 0);
+  document.getElementById('user-sub').textContent = debugText;
+  
   setTimeout(function() {
     loadProfile();
     loadTopup();
