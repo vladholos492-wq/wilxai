@@ -600,15 +600,24 @@ function copyRef() {
 
 // ── Init ──
 window.addEventListener('load', function() {
-  // Show debug info directly on page
-  var user = tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user : null;
-  var debugText = 'uid=' + (user ? user.id : 'NULL') + ' initData=' + (tg.initData ? tg.initData.length : 0);
-  document.getElementById('user-sub').textContent = debugText;
+  var uid = tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user.id : null;
+  if (!uid) return;
   
-  setTimeout(function() {
-    loadProfile();
-    loadTopup();
-  }, 300);
+  fetch('https://whatislove.online/api/profile?uid=' + uid, {mode:'cors',credentials:'omit'})
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      document.getElementById('user-name').textContent = d.name;
+      document.getElementById('user-sub').textContent = '@' + d.username + ' · WILX AI Studio';
+      document.getElementById('balance-val').textContent = d.balance;
+      document.getElementById('stat-balance').textContent = d.balance;
+      document.getElementById('stat-gens').textContent = d.success_gens;
+      document.getElementById('stat-refs').textContent = d.referrals;
+    })
+    .catch(function(e){
+      document.getElementById('stat-balance').textContent = String(e).slice(0,30);
+    });
+
+  loadTopup();
 });
 try { tg.BackButton.onClick(() => switchPage('profile')); } catch(e) {}
 </script>
