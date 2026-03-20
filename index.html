@@ -590,6 +590,7 @@ function copyRef() {
 }
 
 // ── Init ──
+tg.showAlert('v5 loaded, uid=' + (tg.initDataUnsafe?.user?.id || 'none'));
 loadProfile();
 loadTopup();
 tg.BackButton.onClick(() => switchPage('profile'));
